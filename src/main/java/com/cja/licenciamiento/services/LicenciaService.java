@@ -8,7 +8,9 @@ public interface LicenciaService {
 
 	public LicenciaDTO obtenerLicenciaPorId(Integer id);
 	
-	public Boolean buscarLicenciaPorNumero(String numeroLicencia);
+	public Boolean esLicenciaValida(String numeroLicencia);
+	
+	public Integer obtenerCantidadUsuarios(String numeroLicencia);
 	
 	public List<LicenciaDTO> obtenerLicencias();
 	

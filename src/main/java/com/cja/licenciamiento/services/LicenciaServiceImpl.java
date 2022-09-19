@@ -25,25 +25,33 @@ public class LicenciaServiceImpl implements LicenciaService{
 	@Override
 	public LicenciaDTO obtenerLicenciaPorId(Integer id) {
 		Licencia licencia = licenciaRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Licencia", "numero", String.valueOf(id)));
+				.orElseThrow(() -> new ResourceNotFoundException("Licencia", "id", String.valueOf(id)));
 		return mapearDTO(licencia);
 	}
 	
 	@Override
-	public Boolean buscarLicenciaPorNumero(String numeroLicencia) {
+	public Boolean esLicenciaValida(String numeroLicencia) {
 		if(licenciaRepository.findByNumeroLicencia(numeroLicencia).isPresent()) {
 			Licencia licencia = licenciaRepository.findByNumeroLicencia(numeroLicencia).orElse(null);
 			long miliseconds = System.currentTimeMillis();
 			Date fecha_actual = new Date(miliseconds);
-			if (fecha_actual.before(licencia.getFechaFin())) {
-				return true;
-			}
-			else {
-				return false;
-			}
+			
+			return (fecha_actual.before(licencia.getFechaFin()));
 		}
 		else {
 			return false;
+		}
+	}
+	
+	@Override
+	public Integer obtenerCantidadUsuarios(String numeroLicencia) {
+		if(licenciaRepository.findByNumeroLicencia(numeroLicencia).isPresent()) {
+			Licencia licencia = licenciaRepository.findByNumeroLicencia(numeroLicencia).orElse(null);
+			Integer cantUsuarios = licencia.getCantidadUsuarios();
+			return cantUsuarios;
+		}
+		else {
+			return 0;
 		}
 	}
 	

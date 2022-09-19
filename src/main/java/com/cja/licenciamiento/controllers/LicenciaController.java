@@ -31,17 +31,24 @@ public class LicenciaController {
 	public List<LicenciaDTO> mostrarLicencias() {
 		return licenciaService.obtenerLicencias();
 	}
-
-	//Endpoint exclusivo para ser consumido por terceros
-	@GetMapping("/numero/{numero}")
-	public ResponseEntity<String> obtenerLicenciaPorNumeroLicencia(@PathVariable(name = "numero") String numeroLicencia) {
-		if(licenciaService.buscarLicenciaPorNumero(numeroLicencia)) {
+	
+	
+	@GetMapping("/validacion/{numero}")
+	public ResponseEntity<String> validarNumeroLicencia(@PathVariable(name = "numero") String numeroLicencia) {
+		if(licenciaService.esLicenciaValida(numeroLicencia)) {
 			return new ResponseEntity<>("Licencia valida", HttpStatus.OK);
 		}
 		else {
 			return new ResponseEntity<>("Licencia no valida", HttpStatus.UNAUTHORIZED);
 		}
 	}
+	
+	
+	@GetMapping("/cantidadusuarios/{numero}")
+	public Integer obtenerCantidadUsuarios(@PathVariable(name = "numero") String numeroLicencia){
+		return licenciaService.obtenerCantidadUsuarios(numeroLicencia);
+	}
+	
 
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping

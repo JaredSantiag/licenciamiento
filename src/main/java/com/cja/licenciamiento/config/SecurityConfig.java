@@ -3,7 +3,6 @@ package com.cja.licenciamiento.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -19,6 +18,9 @@ import com.cja.licenciamiento.security.CustomUserDetailsService;
 import com.cja.licenciamiento.security.JwtAuthenticationEntryPoint;
 import com.cja.licenciamiento.security.JwtAuthenticationFilter;
 
+/**
+ * Clase de configuracion de seguridad perzonalizada.
+ */
 
 @Configuration
 @EnableWebSecurity
@@ -43,17 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable()
-		    .exceptionHandling()
-		    .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-		    .and()
-		    .sessionManagement()
-		    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		    .and()
-		    .authorizeRequests().antMatchers(HttpMethod.GET, "/licenciamiento/licencias/numero/**").permitAll()
-		    .antMatchers("/licenciamiento/login/**").permitAll()
-		    .anyRequest()
-		    .authenticated();
+		http.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+				.antMatchers("/licenciamiento/licencias/validacion/**","/licenciamiento/licencias/cantidadusuarios/**").permitAll()
+				.antMatchers("/licenciamiento/login/**").permitAll().anyRequest().authenticated();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
